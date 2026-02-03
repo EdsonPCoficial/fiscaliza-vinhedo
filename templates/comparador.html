@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Comparador - Fiscaliza Vinhedo{% endblock %}
+
+{% block content %}
+<h1>💰 Comparador de Preços</h1>
+
+<div class="comparador-box">
+    <p>Digite o nome de um produto para comparar preços:</p>
+    <div class="search-box">
+        <input type="text" id="produto-input" placeholder="Ex: caderno, caneta...">
+        <button onclick="comparar()" class="btn btn-primary">Comparar</button>
+    </div>
+    <div id="resultado"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function comparar() {
+        const produto = document.getElementById('produto-input').value;
+        fetch('/api/comparar', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({produto: produto})
+        })
+        .then(r => r.json())
+        .then(data => {
+            let html = '<table><tr><th>Município</th><th>Produto</th><th>Valor</th></tr>';
+            data.forEach(item => {
+                html += <tr><td>${item.municipio}</td><td>${item.produto}</td><td>R$ ${item.valor_unitario?.toFixed(2)}</td></tr>;
+            });
+            html += '</table>';
+            document.getElementById('resultado').innerHTML = html;
+        });
+    }
+</script>
+{% endblock %}

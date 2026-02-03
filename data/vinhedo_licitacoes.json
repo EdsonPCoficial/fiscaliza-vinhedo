@@ -1,0 +1,42 @@
+[
+    {
+        "numero": "001/2024",
+        "orgao": "Secretaria de Educação",
+        "objeto": "Aquisição de material escolar",
+        "valor": 95000.00,
+        "data_publicacao": "2024-01-15",
+        "situacao": "Concluída",
+        "modalidade": "Dispensa",
+        "itens": [
+            {
+                "descricao": "Caderno universitário 200 folhas",
+                "quantidade": 1000,
+                "valor_unitario": 25.90,
+                "valor_total": 25900.00
+            },
+            {
+                "descricao": "Caneta esferográfica azul",
+                "quantidade": 5000,
+                "valor_unitario": 3.50,
+                "valor_total": 17500.00
+            }
+        ]
+    },
+    {
+        "numero": "002/2024",
+        "orgao": "Secretaria de Saúde",
+        "objeto": "Aquisição de medicamentos",
+        "valor": 150000.00,
+        "data_publicacao": "2024-02-01",
+        "situacao": "Em andamento",
+        "modalidade": "Pregão",
+        "itens": [
+            {
+                "descricao": "Paracetamol 500mg caixa c/ 20",
+                "quantidade": 500,
+                "valor_unitario": 15.00,
+                "valor_total": 7500.00
+            }
+        ]
+    }
+]

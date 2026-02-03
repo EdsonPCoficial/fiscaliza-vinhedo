@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Fiscaliza Vinhedo{% endblock %}
+
+{% block content %}
+<h1>📊 Dashboard de Licitações</h1>
+
+<div class="filters">
+    <input type="text" id="search-input" placeholder="Buscar licitação...">
+</div>
+
+<div class="table-container">
+    <table id="licitacoes-table">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Órgão</th>
+                <th>Objeto</th>
+                <th>Valor</th>
+                <th>Data</th>
+                <th>Situação</th>
+            </tr>
+        </thead>
+        <tbody id="licitacoes-body">
+            <tr><td colspan="6">Carregando...</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function loadLicitacoes() {
+        fetch('/api/licitacoes')
+            .then(r => r.json())
+            .then(data => {
+                const tbody = document.getElementById('licitacoes-body');
+                tbody.innerHTML = '';
+                data.forEach(lic => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${lic.numero}</td>
+                            <td>${lic.orgao}</td>
+                            <td>${lic.objeto}</td>
+                            <td class="valor">R$ ${lic.valor?.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                            <td>${lic.data_publicacao}</td>
+                            <td>${lic.situacao}</td>
+                        </tr>
+                    `;
+                });
+            });
+    }
+    loadLicitacoes();
+</script>
+{% endblock %}

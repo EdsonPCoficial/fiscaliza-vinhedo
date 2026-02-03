@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>🔍 Fiscaliza Vinhedo</h1>
+    <p class="subtitle">Sistema de fiscalização de licitações e compras públicas da Prefeitura de Vinhedo</p>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3 id="total-licitacoes">Carregando...</h3>
+            <p>Licitações Analisadas</p>
+        </div>
+        <div class="stat-card alert">
+            <h3 id="total-alertas">Carregando...</h3>
+            <p>Alertas de Irregularidades</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="economia-potencial">R$ 0,00</h3>
+            <p>Economia Potencial Identificada</p>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="/dashboard" class="btn btn-primary">Ver Dashboard</a>
+        <a href="/comparador" class="btn btn-secondary">Comparar Preços</a>
+        <a href="/alertas" class="btn btn-danger">Ver Alertas</a>
+    </div>
+</div>
+
+<div class="features">
+    <h2>Funcionalidades</h2>
+    <div class="feature-grid">
+        <div class="feature">
+            <h3>📊 Análise de Licitações</h3>
+            <p>Monitoramento completo das licitações da prefeitura de Vinhedo</p>
+        </div>
+        <div class="feature">
+            <h3>💰 Comparação de Preços</h3>
+            <p>Compare preços com outras prefeituras e identifique superfaturamento</p>
+        </div>
+        <div class="feature">
+            <h3>🚨 Alertas Automáticos</h3>
+            <p>Detecção automática de irregularidades e modalidades inadequadas</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Carregar estatísticas iniciais
+    fetch('/api/analise')
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('total-licitacoes').textContent = data.total_licitacoes;
+            document.getElementById('total-alertas').textContent = data.total_alertas;
+        });
+</script>
+{% endblock %}

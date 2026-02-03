@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Alertas - Fiscaliza Vinhedo{% endblock %}
+
+{% block content %}
+<h1>🚨 Alertas de Irregularidades</h1>
+
+<div id="alertas-lista">
+    <p>Carregando...</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function loadAlertas() {
+        fetch('/api/analise')
+            .then(r => r.json())
+            .then(data => {
+                const div = document.getElementById('alertas-lista');
+                if (data.alertas.length === 0) {
+                    div.innerHTML = '<p class="success">✅ Nenhuma irregularidade detectada!</p>';
+                    return;
+                }
+                let html = '';
+                data.alertas.forEach(a => {
+                    html += `<div class="alerta-card">
+                        <h4>${a.tipo}</h4>
+                        <p>Licitação: ${a.licitacao}</p>
+                        <p>${a.item || a.mensagem}</p>
+                    </div>`;
+                });
+                div.innerHTML = html;
+            });
+    }
+    loadAlertas();
+</script>
+{% endblock %}

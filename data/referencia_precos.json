@@ -1,0 +1,15 @@
+{
+    "caderno universitário": 18.50,
+    "caneta esferográfica": 1.20,
+    "paracetamol 500mg": 8.90,
+    "outros_municipios": {
+        "Valinhos": {
+            "caderno universitário": 19.00,
+            "caneta esferográfica": 1.30
+        },
+        "Louveira": {
+            "caderno universitário": 17.80,
+            "caneta esferográfica": 1.15
+        }
+    }
+}
