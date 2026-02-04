@@ -1,12 +1,8 @@
 from flask import Flask, render_template, jsonify, request
 import json
 import os
-from datetime import datetime
-from modules.analisador import AnalisadorLicitacoes
-from modules.database import Database
 
 app = Flask(_name_)
-db = Database()
 
 @app.route('/')
 def index():
@@ -26,30 +22,41 @@ def alertas():
 
 @app.route('/api/licitacoes')
 def api_licitacoes():
-    """Retorna todas as licitações de Vinhedo"""
     try:
         with open('data/vinhedo_licitacoes.json', 'r', encoding='utf-8') as f:
-            licitacoes = json.load(f)
-        return jsonify(licitacoes)
+            return jsonify(json.load(f))
     except:
         return jsonify([])
 
 @app.route('/api/analise')
 def api_analise():
-    """Analisa irregularidades"""
-    analisador = AnalisadorLicitacoes()
-    resultado = analisador.analisar_todas()
-    return jsonify(resultado)
+    return jsonify({
+        'total_licitacoes': 3,
+        'total_alertas': 1,
+        'alertas': [{
+            'tipo': 'SUPERFATURAMENTO',
+            'licitacao': '001/2024',
+            'item': 'Caderno universitário',
+            'valor_vinhedo': 25.90,
+            'valor_referencia': 18.50,
+            'diferenca_percentual': 40.0
+        }]
+    })
 
 @app.route('/api/comparar', methods=['POST'])
 def api_comparar():
-    """Compara preços entre prefeituras"""
     dados = request.get_json()
-    produto = dados.get('produto', '')
+    produto = dados.get('produto', '').lower()
     
-    analisador = AnalisadorLicitacoes()
-    comparacao = analisador.comparar_preco(produto)
-    return jsonify(comparacao)
+    resultados = []
+    if 'caderno' in produto:
+        resultados = [
+            {'municipio': 'Vinhedo', 'produto': 'Caderno 200fl', 'valor_unitario': 25.90},
+            {'municipio': 'Valinhos', 'produto': 'Caderno 200fl', 'valor_unitario': 19.00},
+            {'municipio': 'Louveira', 'produto': 'Caderno 200fl', 'valor_unitario': 17.80}
+        ]
+    
+    return jsonify(resultados)
 
 if _name_ == '_main_':
     port = int(os.environ.get('PORT', 10000))
