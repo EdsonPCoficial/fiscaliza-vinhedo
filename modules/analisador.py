@@ -1,6 +1,4 @@
 import json
-import pandas as pd
-from datetime import datetime
 
 class AnalisadorLicitacoes:
     def _init_(self):
@@ -25,16 +23,16 @@ class AnalisadorLicitacoes:
         alertas = []
         
         for lic in self.licitacoes:
-            # Verifica preços acima da média
             if 'itens' in lic:
                 for item in lic['itens']:
                     descricao = item.get('descricao', '').lower()
                     valor_unit = item.get('valor_unitario', 0)
                     
-                    # Compara com preços de referência
                     for ref_produto, ref_preco in self.precos_referencia.items():
+                        if isinstance(ref_preco, dict):
+                            continue
                         if ref_produto.lower() in descricao:
-                            if valor_unit > ref_preco * 1.5:  # 50% acima
+                            if valor_unit > ref_preco * 1.5:
                                 alertas.append({
                                     'tipo': 'SUPERFATURAMENTO',
                                     'licitacao': lic.get('numero', 'N/A'),
@@ -44,7 +42,6 @@ class AnalisadorLicitacoes:
                                     'diferenca_percentual': round(((valor_unit - ref_preco) / ref_preco) * 100, 2)
                                 })
             
-            # Verifica licitações com valor muito baixo (dispensa indevida)
             if lic.get('valor', 0) > 80000 and lic.get('modalidade') == 'Dispensa':
                 alertas.append({
                     'tipo': 'MODALIDADE_INADEQUADA',
@@ -76,17 +73,17 @@ class AnalisadorLicitacoes:
                             'quantidade': item.get('quantidade')
                         })
         
-        # Adiciona preços de referência de outras prefeituras
-        for municipio, produtos in self.precos_referencia.get('outros_municipios', {}).items():
-            for prod, preco in produtos.items():
-                if produto_busca.lower() in prod.lower():
-                    resultados.append({
-                        'municipio': municipio,
-                        'licitacao': 'Referência',
-                        'data': '-',
-                        'produto': prod,
-                        'valor_unitario': preco,
-                        'quantidade': 1
-                    })
+        if 'outros_municipios' in self.precos_referencia:
+            for municipio, produtos in self.precos_referencia['outros_municipios'].items():
+                for prod, preco in produtos.items():
+                    if produto_busca.lower() in prod.lower():
+                        resultados.append({
+                            'municipio': municipio,
+                            'licitacao': 'Referência',
+                            'data': '-',
+                            'produto': prod,
+                            'valor_unitario': preco,
+                            'quantidade': 1
+                        })
         
         return resultados
